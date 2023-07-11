@@ -8,8 +8,13 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.14",
+    "@heroicons/vue": "^2.0.18",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "vue": "^3.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

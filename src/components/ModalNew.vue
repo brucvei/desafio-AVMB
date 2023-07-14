@@ -27,7 +27,8 @@
                             </div>
                             <div class="espacado">
                                 <label for="file">Arquivo</label><br>
-                                <input type="file" id="file" name="file" class="input" accept="application/pdf" required v-on:change="handleFileUpload">
+                                <input type="file" id="file" name="file" class="input" accept="application/pdf" required
+                                       ref="file" v-on:change="selectFile">
                             </div>
                             <br>
                             <button class="blue-button" type="button" v-on:click="enviar">Enviar</button>
@@ -42,9 +43,9 @@
 import axios from "axios";
 
 export default {
-    name: "TableCenter",
+    name: "ModalNew",
     data() {
-        return {data: {file: ''}}
+        return {data: {}, file: {}}
     },
     created() {
         this.fetchData()
@@ -52,6 +53,7 @@ export default {
     methods: {
         fetchData() {
             axios.get("http://localhost:3000/repositorys").then(resp => {
+                console.log(resp.data)
                 this.data = resp.data
             }).catch(err => {
                 console.log(err)
@@ -63,25 +65,39 @@ export default {
             let desc = document.getElementById("description").value
             let rep = document.getElementById("repository").value
             let arq = document.getElementById("file")
-            console.log(this.file)
+
             if (!desc || !rep || !arq) {
                 alert("preencha todos os campos!");
                 return;
             }
 
-            axios.post("http://localhost:3000/create-envelop", {
-                body: {
-                    "description": desc,
-                    "repository": rep,
-                    "docName": arq.value,
-                    "docType": arq.files[0].type,
-                    "docFile": arq.files[0]
-                }
-            }).then(() => window.location = "/").catch(err => {
+            const doc = this.file.result.split('base64,')[1]
+
+            const params = {
+                "description": desc,
+                "repository": rep,
+                "docName": arq.files[0].name,
+                "docType": arq.files[0].type,
+                "file": doc
+            };
+            console.log()
+            axios.post("http://localhost:3000/create-envelop", params)
+                .then((msg) => {
+                    console.log(msg)
+                    alert(msg.statusText);
+                    window.location = "/";
+                }).catch(err => {
                 console.log(err)
                 throw err
             });
         },
+
+        selectFile() {
+            let file = this.$refs.file.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            this.file = reader;
+        }
 
     }
 }

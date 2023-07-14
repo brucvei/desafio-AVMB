@@ -12,10 +12,52 @@
             <td>{{ envelope.descricao }}</td>
             <td>{{ format(envelope.dataHoraCriacao) }}</td>
             <td>{{ envelope.Usuario.nome }}</td>
-            <td class="button">grupo de botoes que vou por dps</td>
+            <td class="button">
+                <button type="button" class="blue-button" v-on:click="modal(envelope.id)">+ signatario</button>
+            </td>
         </tr>
     </table>
+    <div v-if="showModalSig == 1">
+        <ModalSignatario :id="id"/>
+    </div>
 </template>
+
+<script>
+import axios from "axios";
+import moment from 'moment';
+import ModalSignatario from "@/components/ModalSignatario.vue";
+
+export default {
+    name: "TableCenter",
+    components: {
+        ModalSignatario
+    },
+    data() {
+        return {data: [], showModalSig: -1, id:""}
+    },
+    created() {
+        this.fetchData()
+    },
+    methods: {
+        fetchData() {
+            axios.get("http://localhost:3000").then(resp => {
+                console.log(resp.data)
+                this.data = resp.data
+            }).catch(err => {
+                console.log(err)
+                throw err
+            });
+        },
+        format(date) {
+            return moment(String(date)).format('DD/MM/YYYY HH:mm')
+        },
+        modal: function (id) {
+            this.showModalSig *= -1;
+            this.id = id;
+        }
+    }
+}
+</script>
 <style scoped>
 
 table {
@@ -74,31 +116,3 @@ td.buttons:hover{
     cursor: pointer;
 }
 </style>
-<script>
-import axios from "axios";
-import moment from 'moment';
-
-export default {
-    name: "TableCenter",
-    data() {
-        return {data: []}
-    },
-    created() {
-        this.fetchData()
-    },
-    methods: {
-        fetchData() {
-            axios.get("http://localhost:3000").then(resp => {
-                console.log(resp.data)
-                this.data = resp.data
-            }).catch(err => {
-                console.log(err)
-                throw err
-            });
-        },
-        format(date) {
-            return moment(String(date)).format('DD/MM/YYYY HH:mm')
-        }
-    }
-}
-</script>

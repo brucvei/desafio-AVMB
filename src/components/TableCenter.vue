@@ -22,6 +22,9 @@
                 <button type="button" class="blue-button buttons" v-on:click="status(envelope.id)"
                         title="Verificar status">Status
                 </button>
+                <button type="button" class="blue-button buttons" v-on:click="download(envelope.hashSHA256)"
+                        title="Download do arquivo">Download
+                </button>
             </td>
         </tr>
     </table>
@@ -80,6 +83,15 @@ export default {
             axios.post("http://localhost:3000/get-status", {"id": id}).then(msg => {
                 alert(msg.data);
             });
+        },
+        download(hash) {
+            axios.post("http://localhost:3000/download", {"code": hash}).then(msg => {
+                const linkSource = `data:${msg.data.mimeType};base64,${msg.data.envelopeContent}`;
+                const downloadLink = document.createElement("a");
+                downloadLink.href = linkSource;
+                downloadLink.download = msg.data.nomeArquivo;
+                downloadLink.click();
+            }).catch(console.error);
         },
     }
 }

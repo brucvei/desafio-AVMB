@@ -149,10 +149,12 @@ app.post('/get-status', (req, res) => {
 
 // download do envelope
 app.post('/download', (req, res) => {
+    console.log("/download")
     const obj = req.body;
-    const params = {"token": token, "params": {"hashSHA256": obj.hash}};
-    axios.post(URL + "getDadosEnvelope", params).then(response => {
-        res.send(response.response);
+    const params = {"token": token, "params": {"hashSHA256": obj.code}};
+    axios.post(URL + "downloadPDFEnvelope", params).then(response => {
+        // console.log(response.data.response)
+        res.send(response.data.response);
     }).catch(err => res.send(err));
 })
 

@@ -142,10 +142,7 @@ app.post('/get-status', (req, res) => {
     const obj = req.body;
     const params = {"token": token, "params": {"idEnvelope": obj.id, "getLobs": "N"}};
     axios.post(URL + "getDadosEnvelope", params).then(response => {
-        console.log("AAAAAA")
-        const status = response.response.status;
-        console.log("status: ");
-        console.log(status);
+        const status = response.data.response.status;
         res.send(arr[status]);
     }).catch(err => res.send(err));
 })

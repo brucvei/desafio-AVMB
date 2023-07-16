@@ -13,9 +13,15 @@
             <td>{{ format(envelope.dataHoraCriacao) }}</td>
             <td>{{ envelope.Usuario.nome }}</td>
             <td class="button">
-                <button type="button" class="blue-button buttons" v-on:click="modal(envelope.id)" title="Adicionar signatarios">Signatarios</button>
-                <button type="button" class="blue-button buttons" v-on:click="enviar(envelope.id)" title="Encaminhar para assinatura">Encaminhar</button>
-                <button type="button" class="blue-button buttons" v-on:click="status(envelope.id)" title="Verificar status">Status</button>
+                <button type="button" class="blue-button buttons" v-on:click="modal(envelope.id)"
+                        title="Adicionar signatarios">Signatarios
+                </button>
+                <button type="button" class="blue-button buttons" v-on:click="enviar(envelope.id)"
+                        title="Encaminhar para assinatura">Encaminhar
+                </button>
+                <button type="button" class="blue-button buttons" v-on:click="status(envelope.id)"
+                        title="Verificar status">Status
+                </button>
             </td>
         </tr>
     </table>
@@ -35,7 +41,7 @@ export default {
         ModalSignatario
     },
     data() {
-        return {data: [], showModalSig: -1, id:""}
+        return {data: [], showModalSig: -1, id: ""}
     },
     created() {
         this.fetchData()
@@ -57,7 +63,7 @@ export default {
             this.showModalSig *= -1;
             this.id = id;
         },
-        enviar(id){
+        enviar(id) {
             console.log(id)
             axios.post("http://localhost:3000/forward", {"id": id}).then(msg => {
                 console.log(msg)
@@ -69,16 +75,10 @@ export default {
                 }
             });
         },
-        status(id){
+        status(id) {
             console.log(id)
             axios.post("http://localhost:3000/get-status", {"id": id}).then(msg => {
-                console.log(msg)
-                // if (msg.data != "Envelope encaminhado para coleta de assinaturas!" || msg.data != "") {
-                    alert(msg);
-                    // window.location = "/";
-                // } else {
-                //     alert("Envelope encaminhado para coleta de assinaturas!");
-                // }
+                alert(msg.data);
             });
         },
     }
@@ -138,9 +138,11 @@ tr:hover {
     color: #555;
     background-color: #f5f5f5;
 }
-td.buttons:hover{
+
+td.buttons:hover {
     cursor: pointer;
 }
+
 .buttons {
     margin: 2px;
 }

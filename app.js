@@ -22,6 +22,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 // get all envelopes
 app.get('/', (req, res) => {
     console.log("/")
+    var envelopes = [];
     axios.post(URL + "getIdentificador", {"token": token, "params": {}}).then(resp => {
         user = resp.data.response.Usuario.id;
         // console.log("User: " + user);
@@ -29,27 +30,31 @@ app.get('/', (req, res) => {
             "token": token,
             "params": {"idProprietario": user}
         }).then((aaaaaa) => {
-            let tmp = [];
+            let tmp = [], contador = 0;
             aaaaaa.data.response.forEach(elem => tmp.push(elem.id));
             tmp.forEach((id) => {
-                // console.log("Repositorio: " + id);
+                contador++;
                 axios.post(URL + "getEnvelopesByRepositorioOuPasta", {
                     "token": token,
                     "params": {"idRepositorio": id, "maxRegistros": "1000"}
                 }).then((list) => {
                     let obj = list.data.response;
-                    obj.forEach(envelope => {
-                        connection.query('SELECT id FROM envelope WHERE id = ' + envelope.id, function (err, results) {
-                            if (!results || results == "") {
-                                connection.query('INSERT INTO envelope (`id`, `descricao`, `dataExpiracao`, `repositorio`, `hash`) VALUES (' + envelope.id + ', "' + envelope.descricao + '", "' + envelope.dataHoraCriacao + '", ' + id + ', "' + envelope.hashSHA256 + '")', function (err, rows) {
-                                    if (err) throw err;
-                                    console.log('Linhas modificadas ', rows);
-                                });
-                            }
+                    // console.log(obj)
+                    if (obj.length > 0) {
+                        console.log("obj.data")
+                        obj.forEach(envelope => {
+                            connection.query('SELECT id FROM envelope WHERE id = ' + envelope.id, function (err, results) {
+                                if (!results || results == "") {
+                                    connection.query('INSERT INTO envelope (`id`, `descricao`, `dataExpiracao`, `repositorio`, `hash`) VALUES (' + envelope.id + ', "' + envelope.descricao + '", "' + envelope.dataHoraCriacao + '", ' + id + ', "' + envelope.hashSHA256 + '")', function (err, rows) {
+                                        if (err) throw err;
+                                        console.log('Linhas modificadas ', rows);
+                                    });
+                                }
+                            });
+                            envelopes.push(envelope);
                         });
-                    });
-                    // console.log(obj);
-                    res.send(obj);
+                        if (contador == tmp.length) res.send(envelopes);
+                    }
                 })
             })
         })

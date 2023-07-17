@@ -84,7 +84,7 @@ export default {
             axios.post("https://virtserver.swaggerhub.com/BRUNACAETANO/desafio/1.0.0/create-envelope", params)
                 .then((msg) => {
                     console.log(msg)
-                    alert(msg.statusText);
+                    alert(msg);
                     window.location = "/";
                 }).catch(err => {
                 console.log(err)

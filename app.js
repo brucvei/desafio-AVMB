@@ -103,7 +103,7 @@ app.post('/create-envelope', (req, res) => {
         .then(response => res.send(response.response.message))
         .catch(err => {
             console.log("erro - ", err.response.data.error)
-            res.send(err.response.data.error.data)
+            res.status(418).json({"erro": err.response.data.error})
         });
 })
 

@@ -45,7 +45,7 @@ export default {
                 "email": email
             };
             console.log(params)
-            axios.post("http://localhost:3000/set-people", params)
+            axios.post("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/set-people", params)
                 .then((msg) => {
                     console.log(msg)
                     if (msg.error) {

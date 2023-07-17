@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
 })
 
 // criacao de envelopes
-app.post('/create-envelop', (req, res) => {
+app.post('/create-envelope', (req, res) => {
     console.log("/create-envelop")
     const obj = req.body;
 

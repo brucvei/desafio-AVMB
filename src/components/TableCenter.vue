@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         fetchData() {
-            axios.get("http://localhost:3000").then(resp => {
+            axios.get("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0").then(resp => {
                 console.log(resp.data)
                 this.data = resp.data
             }).catch(err => {
@@ -68,7 +68,7 @@ export default {
         },
         enviar(id) {
             console.log(id)
-            axios.post("http://localhost:3000/forward", {"id": id}).then(msg => {
+            axios.post("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/forward", {"id": id}).then(msg => {
                 console.log(msg)
                 if (msg.data != "Envelope encaminhado para coleta de assinaturas!" || msg.data != "") {
                     alert(msg.data);
@@ -80,12 +80,12 @@ export default {
         },
         status(id) {
             console.log(id)
-            axios.post("http://localhost:3000/get-status", {"id": id}).then(msg => {
+            axios.post("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/get-status", {"id": id}).then(msg => {
                 alert(msg.data);
             });
         },
         download(hash) {
-            axios.post("http://localhost:3000/download", {"code": hash}).then(msg => {
+            axios.post("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/download", {"code": hash}).then(msg => {
                 const linkSource = `data:${msg.data.mimeType};base64,${msg.data.envelopeContent}`;
                 const downloadLink = document.createElement("a");
                 downloadLink.href = linkSource;

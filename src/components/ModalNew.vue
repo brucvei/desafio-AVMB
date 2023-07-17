@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         fetchData() {
-            axios.get("http://localhost:3000/repositorys").then(resp => {
+            axios.get("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/repositorys").then(resp => {
                 console.log(resp.data)
                 this.data = resp.data
             }).catch(err => {
@@ -81,7 +81,7 @@ export default {
                 "file": doc
             };
             console.log()
-            axios.post("http://localhost:3000/create-envelop", params)
+            axios.post("https://app.swaggerhub.com/apis-docs/BRUNACAETANO/desafio/1.0.0/create-envelope", params)
                 .then((msg) => {
                     console.log(msg)
                     alert(msg.statusText);

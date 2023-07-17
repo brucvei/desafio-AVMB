@@ -1,0 +1,472 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Desafio AVMB",
+    "description" : "This is a simple API",
+    "contact" : {
+      "email" : "bruna.caetanov@gmail.com"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/BRUNACAETANO/desafio/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  } ],
+  "paths" : {
+    "/" : {
+      "get" : {
+        "summary" : "home",
+        "description" : "Pagina inicial do site, retorna todos os envelopes do meu usuario, faz uma sequencias de requisicoes para o ASTEN",
+        "responses" : {
+          "200" : {
+            "description" : "Objeto retornado pelo ASTEN",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/dadosEnvelope"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-envelope" : {
+      "post" : {
+        "summary" : "Cria envelope",
+        "description" : "Cria um envelope a partir de um arquivo",
+        "requestBody" : {
+          "description" : "Informacoes para criar o arquivo",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/create"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/set-people" : {
+      "post" : {
+        "summary" : "Adiciona o email de um signatario",
+        "description" : "A partir do email, adiciona um signatario ao envelope",
+        "requestBody" : {
+          "description" : "Id do documento e email da pessoa",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/signatario"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/forward" : {
+      "post" : {
+        "summary" : "Encaminhar para assinatura",
+        "description" : "Encaminha o envelope para a assinatura dos signatarios",
+        "requestBody" : {
+          "description" : "Id do documento",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/forward_body"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-status" : {
+      "post" : {
+        "summary" : "Status dos envelopes",
+        "description" : "Retorna os status dos envelopes",
+        "requestBody" : {
+          "description" : "Id do documento",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/getstatus_body"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/download" : {
+      "post" : {
+        "summary" : "Download do envelope",
+        "description" : "Download completo do arquivo e assinaturas",
+        "requestBody" : {
+          "description" : "Hash do documento",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/download_body"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK, o download sera realizado automaticamente"
+          }
+        }
+      }
+    },
+    "/repositorys" : {
+      "get" : {
+        "summary" : "Repositorios do usuario",
+        "description" : "Retorna todos os repositorios do usuario",
+        "responses" : {
+          "200" : {
+            "description" : "Retorna lista de repositorios do usuario",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/dadosRepository"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "dadosEnvelope" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "example" : 1951
+          },
+          "descricao" : {
+            "type" : "string",
+            "example" : "Novo Contrato 2"
+          },
+          "dataHoraCriacao" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "dataEnvioAgendado" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "horaEnvioAgendado" : {
+            "type" : "string",
+            "format" : "time"
+          },
+          "status" : {
+            "type" : "integer",
+            "example" : 3
+          },
+          "numeroPaginas" : {
+            "type" : "integer",
+            "example" : 5
+          },
+          "hashSHA256" : {
+            "type" : "string",
+            "example" : "145d51735aca43b1732883f92ba231bba4bff41f8ee8c7721259a8892f5"
+          },
+          "permitirDownload" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "permitirResetarExpiracao" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "permitirRestaurarDaLixeira" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "permitirEnvioParaLixeira" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "permitirDespachos" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "emAcompanhamento" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "Usuario" : {
+            "$ref" : "#/components/schemas/user"
+          },
+          "statusContrato" : {
+            "type" : "string",
+            "example" : "0"
+          },
+          "numContrato" : {
+            "type" : "string",
+            "example" : ""
+          },
+          "listaTags" : {
+            "$ref" : "#/components/schemas/dadosEnvelope_listaTags"
+          },
+          "permiteArquivar" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "permiteCancelar" : {
+            "type" : "string",
+            "example" : "N"
+          },
+          "statusDescr" : {
+            "type" : "string",
+            "example" : "Concluído"
+          }
+        }
+      },
+      "user" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "example" : 3
+          },
+          "nome" : {
+            "type" : "string",
+            "example" : "bruna"
+          }
+        }
+      },
+      "tags" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "153043"
+          },
+          "descricao" : {
+            "type" : "string",
+            "example" : "vetor"
+          }
+        }
+      },
+      "create" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string",
+            "example" : "teste"
+          },
+          "repository" : {
+            "type" : "string",
+            "example" : "123"
+          },
+          "docName" : {
+            "type" : "string",
+            "example" : "example.txt"
+          },
+          "docType" : {
+            "type" : "string",
+            "example" : "application/text"
+          },
+          "file" : {
+            "type" : "string",
+            "example" : "base64..."
+          }
+        }
+      },
+      "signatario" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "123"
+          },
+          "email" : {
+            "type" : "string",
+            "example" : "teste@teste.com"
+          }
+        }
+      },
+      "dadosRepository" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "example" : 1951
+          },
+          "Usuario" : {
+            "$ref" : "#/components/schemas/dadosRepository_Usuario"
+          },
+          "nome" : {
+            "type" : "string",
+            "example" : "testeZ"
+          },
+          "compartilharCriacaoDocs" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "compartilharVisualizacaoDocs" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "ocultarEmailSignatarios" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "nomeRemetente" : {
+            "type" : "string",
+            "example" : ""
+          },
+          "opcaoValidCodigo" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidCertICP" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidDocFoto" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidDocSelfie" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidTokenSMS" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidLogin" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidReconhecFacial" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "opcaoValidPix" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "lembrarAssinPendentes" : {
+            "type" : "string",
+            "example" : "S"
+          },
+          "dataHoraCriacao" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          }
+        }
+      },
+      "forward_body" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        }
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "string",
+            "example" : "Envelope encaminhado para coleta de assinaturas!"
+          }
+        }
+      },
+      "getstatus_body" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        }
+      },
+      "inline_response_200_1" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "string",
+            "example" : "Em construção"
+          }
+        }
+      },
+      "download_body" : {
+        "type" : "object",
+        "properties" : {
+          "hashSHA256" : {
+            "type" : "string",
+            "example" : "125bc811ff75103031ab20c06484924f1b317ae95748481cd790509b24e01d5d"
+          }
+        }
+      },
+      "dadosEnvelope_listaTags" : {
+        "type" : "object",
+        "properties" : {
+          "Tag" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/tags"
+            }
+          }
+        }
+      },
+      "dadosRepository_Usuario" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        }
+      }
+    }
+  }
+}
